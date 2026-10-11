@@ -1,7 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#20261f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="A straightforward cycling and strength workout menu.">
+<title>Training Menu</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%2320261f'/%3E%3Cpath d='M12 20h40v6H35v24h-7V26H12z' fill='%23e4570b'/%3E%3C/svg%3E">
+<style>
+:root{--paper:#f5f4ee;--card:#fff;--ink:#20261f;--muted:#6b716a;--line:#dadcd4;--accent:#e4570b;--light:#fcefe5;--green:#425747}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0}
+.site{max-width:760px;margin:auto;padding:0 16px 70px}
+header{background:var(--ink);color:white;padding:30px 0 20px}
+.header-inner{max-width:760px;padding:0 16px;margin:auto}
+.eyebrow{font:700 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:#ffc29f;text-transform:uppercase}
+h1,h2,h3{margin:0}
+h1{font-size:clamp(34px,7vw,50px);letter-spacing:-.055em;line-height:1.05;margin:7px 0}
+.subheading{color:#d2d9d0;font-size:13px;margin:12px 0 0}
+.subheading strong{color:#fff;font-weight:650}
+.tabs-wrap{position:sticky;top:0;z-index:5;background:var(--paper);padding:12px 0;border-bottom:1px solid var(--line)}
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.tabs button{appearance:none;background:var(--card);border:1px solid var(--line);border-radius:7px;color:var(--ink);font:750 12px/1.2 system-ui,-apple-system,sans-serif;padding:12px 4px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:white}
+.tabs button:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.day{padding-top:22px}
+.day-title{display:flex;justify-content:space-between;align-items:end;gap:10px;border-bottom:3px solid var(--ink);padding-bottom:10px;margin-bottom:12px}
+.day-title h2{font-size:27px;letter-spacing:-.035em;line-height:1.1}
+.day-title p{font-size:12px;color:var(--muted);margin:0;text-align:right}
+.workout{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:10px 0;overflow:hidden}
+.workout[open]{border-color:#babeb5}
+.workout summary{cursor:pointer;list-style:none;position:relative;padding:15px 42px 15px 16px}
+.workout summary::-webkit-details-marker{display:none}
+.workout summary:after{content:"+";position:absolute;right:16px;top:17px;font-size:22px;font-weight:400;line-height:1;color:var(--muted)}
+.workout[open] summary:after{content:"−"}
+.workout-name{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:750;font-size:16px;letter-spacing:-.015em}
+.duration{font:700 11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap;color:var(--muted)}
+.cue{font-size:12px;color:var(--muted);margin:2px 0 0}
+.prescription{padding:0 16px 16px;border-top:1px solid var(--line)}
+.steps{padding:0;margin:10px 0 0;list-style:none}
+.steps li{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.steps li:last-child{border-bottom:none}
+.when{font:700 11px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent)}
+.watts{font:650 12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap}
+.note{color:var(--muted);font-size:12.5px;margin:8px 0 0}
+.caution{font-size:12px;color:var(--muted);margin-top:20px;line-height:1.55}
+.heat summary{border-left:3px solid var(--accent);padding-left:13px}
+.race summary{border-left:3px solid var(--green);padding-left:13px}
+.footnote{font-size:12px;color:var(--muted);margin:17px 0 0}
+[hidden]{display:none!important}
+@media(max-width:400px){.site{padding:0 12px 50px}.header-inner{padding:0 12px}.workout-name{font-size:14px}.steps li{grid-template-columns:60px 1fr;gap:8px}.day-title h2{font-size:24px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header><div class="header-inner">
+<div class="eyebrow">Cycling / Strength</div>
+<h1>Training Menu</h1>
+<p class="subheading"><strong>FTP 245 W</strong> &nbsp;·&nbsp; Monday &amp; Friday rest</p>
+</div></header>
+<main class="site">
+<div class="tabs-wrap"><nav class="tabs" aria-label="Choose a training day" role="tablist">
+<button type="button" id="tab-tue" role="tab" aria-controls="tue" aria-selected="true">Tue</button>
+<button type="button" id="tab-wed" role="tab" aria-controls="wed" aria-selected="false">Wed</button>
+<button type="button" id="tab-thu" role="tab" aria-controls="thu" aria-selected="false">Thu</button>
+<button type="button" id="tab-sat" role="tab" aria-controls="sat" aria-selected="false">Sat</button>
+<button type="button" id="tab-sun" role="tab" aria-controls="sun" aria-selected="false">Sun</button>
+</nav></div>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>La Épica 2027 · Evidence-Reviewed Workout Menu V9</title><style>
-:root{--paper:#F4F4EE;--card:#fff;--ink:#20261F;--muted:#6C7266;--line:#DBDCD0;--accent:#E4570B;--warm:#FEF0E4}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font:14px/1.52 system-ui,-apple-system,Segoe UI,sans-serif;padding:0 16px 80px}.wrap{max-width:920px;margin:auto}header{padding:42px 0 16px;border-bottom:3px solid var(--ink)}.eyebrow,.meta,.nav,.section-count,.tag,footer,.zones{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.eyebrow{font-size:11px;letter-spacing:.14em;color:var(--muted)}h1,h2,h3{font-family:'Arial Narrow',Impact,system-ui,sans-serif;text-transform:uppercase;letter-spacing:.015em}h1{font-size:clamp(30px,5.6vw,46px);line-height:1.03;margin:8px 0 14px}.meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:12px}.meta b{color:var(--accent)}.top{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.box{padding:12px 15px;background:var(--card);border:1px solid var(--line);border-radius:5px}.box h3{font-size:15px;margin:0 0 8px}.zones{display:grid;grid-template-columns:1fr auto;font-size:12px;gap:3px 15px}.small{font-size:12px;color:var(--muted)}.nav{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin:22px 0}.nav a{background:var(--card);border:1px solid var(--line);padding:10px 5px;text-align:center;text-decoration:none;color:var(--ink);font-size:12px;border-radius:4px;font-weight:bold}.nav a:hover{border-color:var(--accent)}section{margin:30px 0 0;scroll-margin-top:15px}.head{border-top:3px solid var(--ink);padding:9px 0 10px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}.head h2{font-size:24px;margin:0}.head .desc{font-size:12px;color:var(--muted);text-align:right}.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.option{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:12px 14px;min-height:100px}.option h3{font-size:16px;margin:0 0 4px}.option p{margin:0;font-size:13px}.option.race{background:var(--warm);border-color:#efd0b3}.option.heat{border-left:4px solid var(--accent)}.w{font-family:ui-monospace,Menlo,monospace;font-size:12px;white-space:nowrap;background:var(--paper);border:1px solid var(--line);border-radius:3px;padding:0 4px}.tag{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}.rules{margin:22px 0;background:var(--ink);color:#f4f4ee;padding:13px 16px;border-radius:5px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.rules p{margin:0;font-size:12px}.rules b{color:#fac092}footer{font-size:11px;color:var(--muted);margin-top:34px;border-top:1px solid var(--line);padding-top:12px}@media(max-width:650px){.top,.rules,.options{grid-template-columns:1fr}.nav{grid-template-columns:repeat(3,1fr)}.head{display:block}.head .desc{text-align:left}body{padding:0 12px 50px}}
-.when{font-size:12px;color:#3E4F42;background:#EDF1E8;border-radius:3px;padding:5px 7px;margin:4px 0 8px}.when strong{color:#20261F}
-.option.primary{border-left:4px solid var(--accent);background:#FFF9F1}.option.primary .tag{font-weight:800}.subtle{font-size:11px;color:var(--muted);margin-top:8px}.source-links a{color:inherit} .when{line-height:1.45}
-</style><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="La Épica Training"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#F4F4EE"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2320261F'/%3E%3Ctext x='32' y='43' font-family='Arial' font-size='38' font-weight='bold' fill='%23E4570B' text-anchor='middle'%3EE%3C/text%3E%3C/svg%3E"></head><body><div class="wrap"><header><div class="eyebrow">LA ÉPICA 2027 · WORKOUT MENU · V9</div><h1>Choose Your Training</h1><div class="meta"><span>RACE <b>MAR 27–28</b></span><span>FTP <b>245 W</b></span><span>NOW <b>~6 H/WK</b></span><span>MAX <b>7–8 H/WK</b></span><span>MON / FRI <b>REST</b></span></div></header><div class="top"><div class="box"><h3>Power reference</h3><div class="zones"><span>Z2</span><b>135–184 W</b><span>Tempo</span><b>185–221 W</b><span>Threshold</span><b>222–257 W</b><span>VO₂</span><b>258–294 W</b><span>Anaerobic</span><b>295–368 W</b></div></div><div class="box"><h3>Default choices</h3><div class="zones"><span>Tue</span><b>Rønnestad / Zwift</b><span>Wed</span><b>Full strength</b><span>Thu</span><b>Tempo / easy / heat</b><span>Sat</span><b>Gravel durability</b><span>Sun</span><b>Easy Day 2 / heat / off</b></div></div></div><div class="rules"><p><b>Selection rule:</b> Tuesday is your one hard weekday (prefer Rønnestad or one Zwift race). Thursday is normally tempo/aerobic; choose repeated surges only when Tuesday was controlled <em>and</em> Saturday is easy. On a hard Saturday, Sunday stays easy/off. No three hard days.</p><p><b>Heat:</b> Intro/45-min options are modest doses; meaningful acclimation takes <em>repeated</em> longer exposures. Use heat in place of easy work, not Tuesday VO₂ or normal Wednesday strength. Some airflow; hydrate; stop for dizziness, nausea, confusion or weakness. <b>Long rides:</b> practise ~60–75 g carbohydrate/hour initially and progress only as tolerated.</p></div><nav class="nav"><a href="#tuesday">Tuesday</a><a href="#wednesday">Wednesday</a><a href="#thursday">Thursday</a><a href="#saturday">Saturday</a><a href="#sunday">Sunday</a></nav><section id="tuesday"><div class="head"><h2>Tuesday</h2><div class="desc">One hard day · ~45 min · Rønnestad or Zwift race</div></div><div class="options"><article class="primary option"><div class="tag">Preferred · VO₂</div><h3>Rønnestad 30/15 · 45 min</h3><div class="when"><strong>Do this if: </strong>Default structured VO₂ workout; progress only if repeatable.</div><p>10 min progressive WU (include 2×20 sec primers) → <b>3×11</b> (30 sec <span class="w">~300–320 W</span> / 15 sec <span class="w">~130–155 W</span>) → <b>3 min</b> easy between sets → 4:15 CD. <b>45:00 total.</b> For classic <b>3×13</b>, allow ~55 min with a 15-min WU. Choose repeatable work power, not all-out sprints; adjust after set 1. Resistance mode if ERG transitions are slow.</p></article><article class="option"><div class="tag">Workout</div><h3>VO₂ 4×4 · 45 min</h3><div class="when"><strong>Do this if: </strong>Use longer sustained efforts instead of 30/15s.</div><p>12 min progressive WU → <b>4×4 min</b> <span class="w">270–285 W</span> → <b>3 min easy between</b> → 8 min CD. <b>45:00 total.</b> Adjust for sustained hard but controlled breathing; do not force a watt target after repeated failures.</p></article><article class="option"><div class="tag">Workout</div><h3>Over/Under · 45 min</h3><div class="when"><strong>Do this if: </strong>Target riding after surges, rather than VO₂ development.</div><p>8 min WU → <b>3×9 min</b> (repeat 2 min <span class="w">215–225 W</span> + 1 min <span class="w">260–275 W</span> three times) → <b>3 min easy between</b> → 4 min CD. <b>45:00 total.</b></p></article><article class="option race"><div class="tag">Zwift race</div><h3>Zwift Race · Punchy · 42–47 min</h3><div class="when"><strong>Do this if: </strong>Need spontaneous attacks and pack accelerations.</div><p>12 min progressive WU with 3×20 sec fast → 22–27 min rolling/crit race with repeated accelerations → 8 min CD. Pick by expected duration; stop at 50 min total.</p></article><article class="option race"><div class="tag">Zwift race</div><h3>Zwift Race · Hilly · 43–48 min</h3><div class="when"><strong>Do this if: </strong>Want longer, less predictable supra-threshold efforts.</div><p>10–12 min progressive WU → 25–30 min race featuring repeated 1–5 min climbs → 6 min CD. Choose a race that fits the total time.</p></article></div></section><section id="wednesday"><div class="head"><h2>Wednesday</h2><div class="desc">Strength default · shorter only when needed</div></div><div class="options"><article class="option"><div class="tag">Workout</div><h3>Full Strength · ~56 min</h3><div class="when"><strong>Do this if: </strong>Normal strength week; soreness stays manageable.</div><p>5 min dynamic WU → jumps 3×3 → squat ramp-up → back squat 3×5 @ 205 lb → trap-bar deadlift 2×6 @ 205 lb + pull-ups 2×5–8 → Bulgarian split squat 2×6/leg + OHP 2×6–8 @ 75 lb → Copenhagen plank 2×20–30 sec/side + suitcase carry 2×30–45 sec/side → single-leg calf raise 2×10–15 + push-ups 2 sets. Keep 1–3 reps in reserve; scale squat/deadlift loads if Tuesday was brutal.</p></article><article class="option"><div class="tag">Workout</div><h3>Strength Microdose · 15–20 min</h3><div class="when"><strong>Do this if: </strong>Tuesday was hard or a demanding gravel weekend is coming.</div><p>3 min WU → squat <i>or</i> deadlift 2×3 at ~75–85% usual working load → split squat 1×5/leg → 3–5 min trunk stability. No grinders.</p></article><article class="option"><div class="tag">Workout</div><h3>Recovery Spin · 30 min</h3><div class="when"><strong>Do this if: </strong>Legs tight; movement helps.</div><p>30 min <span class="w">135–155 W</span>.</p></article><article class="option heat"><div class="tag">Heat</div><h3>Heat Ride · 45 min</h3><div class="when"><strong>Do this if: </strong>Strength intentionally skipped; seeking an easy heat exposure.</div><p>5 min easy with normal cooling → 35 min <span class="w">120–155 W</span> in a genuinely warm room with <b>some</b> airflow → 5 min cooled easy. This is a short heat exposure, not a full acclimation dose.</p></article><article class="option"><div class="tag">Workout</div><h3>Off</h3><div class="when"><strong>Do this if: </strong>Fatigued or recovering poorly.</div><p>Full rest.</p></article></div></section><section id="thursday"><div class="head"><h2>Thursday</h2><div class="desc">Supporting aerobic / surges / heat · ~45 min</div></div><div class="options"><article class="option"><div class="tag">Workout</div><h3>Tempo · 45 min</h3><div class="when"><strong>Do this if: </strong>Want steady aerobic work without another maximal day.</div><p>7 min WU → <b>2×15 min</b> <span class="w">195–205 W</span> → 4 min easy between → 4 min CD. <b>45:00 total.</b></p></article><article class="option"><div class="tag">Workout</div><h3>Repeated Surge + Settle · 45 min</h3><div class="when"><strong>Do this if: </strong>Tuesday was not maximal and Saturday is not a hard simulation.</div><p>8 min WU → <b>3×9 min</b> at <span class="w">185–205 W</span>, inserting <b>20 sec at 300–330 W</b> at minutes 0, 3 and 6 of each block; immediately return to steady power → <b>3 min easy between blocks</b> → 4 min CD. <b>45:00 total.</b></p></article><article class="option"><div class="tag">Workout</div><h3>Cadence / Torque Tempo · 45 min</h3><div class="when"><strong>Do this if: </strong>Gravel climbing/torque is a weakness; legs feel fresh.</div><p>8 min WU → <b>3×8 min</b> <span class="w">190–205 W</span> at <b>65–75 rpm</b> with smooth seated force → 4 min easy between → 5 min CD. <b>45:00 total.</b> Avoid if knees or fit are irritated.</p></article><article class="option"><div class="tag">Workout</div><h3>Aerobic · 45 min</h3><div class="when"><strong>Do this if: </strong>Tuesday, Wednesday strength, or Saturday is demanding.</div><p>5 min gentle → 35 min <span class="w">150–175 W</span> steady → 5 min easy. <b>45:00 total.</b></p></article><article class="option heat"><div class="tag">Heat</div><h3>Heat Endurance · 45 min</h3><div class="when"><strong>Do this if: </strong>Need heat exposure while protecting training quality.</div><p>5 min easy with normal cooling → 35 min <span class="w">120–155 W</span> in sustained heat with some airflow → 5 min easy cooled. Thermal stimulus depends on actual conditions; not watts or sweating alone.</p></article><article class="option heat"><div class="tag">Heat</div><h3>Heat Familiarization · 45 min</h3><div class="when"><strong>Do this if: </strong>New to heat or returning after time off.</div><p>5 min easy normally cooled → 25 min <span class="w">120–155 W</span> in manageable warmth with some airflow → 15 min normally cooled easy. <b>45:00 total.</b></p></article></div></section><section id="saturday"><div class="head"><h2>Saturday</h2><div class="desc">One gravel / durability ride · fuel it</div></div><div class="options"><article class="option"><div class="tag">Workout</div><h3>Technical Durability · 2:30–3:00</h3><div class="when"><strong>Do this if: </strong>Handling skill deteriorates as you fatigue.</div><p>First 90 min aerobic → remaining ride on rough/technical gravel with repeated braking, cadence changes, low-speed torque and accelerations. Keep challenging terrain within your handling limits.</p></article><article class="option"><div class="tag">Workout</div><h3>Late Stochastic · 3:00</h3><div class="when"><strong>Do this if: </strong>Need repeatable surges after accumulated fatigue.</div><p>2 h mainly aerobic → 3×15 min <span class="w">185–205 W</span> containing 4×20–45 sec <span class="w">300–340 W</span> each → 5 min easy between blocks → 5 min easy finish. <b>3:00 total.</b></p></article><article class="option"><div class="tag">Workout</div><h3>Long Aerobic · 3:15–3:45</h3><div class="when"><strong>Do this if: </strong>Long-distance fatigue resistance is the priority.</div><p>Mostly <span class="w">150–180 W</span> on mixed terrain. Practice continuous fueling, pacing and efficient technique; don’t invent hard intervals. Keep terrain safe late in the ride.</p></article><article class="option"><div class="tag">Workout</div><h3>Race Simulation · 4:00</h3><div class="when"><strong>Do this if: </strong>Need full gravel + fueling rehearsal; following day can be easy.</div><p>45 min controlled → 2:30 variable gravel terrain/power (surges, braking, reacceleration, imperfect recovery) → 30 min <span class="w">185–205 W</span> with 4×30 sec hard → 15 min easy. <b>4:00 total.</b> Rehearse fueling, equipment and post-ride recovery.</p></article><article class="option"><div class="tag">Workout</div><h3>Easy Gravel · 90 min</h3><div class="when"><strong>Do this if: </strong>Deloading or short on time.</div><p>Mostly <span class="w">145–170 W</span>. Flat/comfortable terrain and no planned surges.</p></article></div></section><section id="sunday"><div class="head"><h2>Sunday</h2><div class="desc">Day-2 durability / heat / rest · one option</div></div><div class="options"><article class="option"><div class="tag">Workout</div><h3>Easy Day 2 · 60 min</h3><div class="when"><strong>Do this if: </strong>Recover while keeping legs moving.</div><p><span class="w">145–165 W</span>.</p></article><article class="option"><div class="tag">Workout</div><h3>Day 2 Aerobic · 1:30</h3><div class="when"><strong>Do this if: </strong>Practicing Day-2 durability with manageable stress.</div><p>15 min easy → 65 min <span class="w">155–175 W</span> → 10 min easy. <b>1:30 total.</b> Watch power/RPE drift relative to Saturday.</p></article><article class="option"><div class="tag">Workout</div><h3>Day 2 Tempo · 1:45</h3><div class="when"><strong>Do this if: </strong>Saturday was controlled and you can pedal strongly today.</div><p>25 min aerobic → 2×20 min <span class="w">180–195 W</span>, 10 min easy between → 30 min aerobic finish. <b>1:45 total.</b> Fuel normally; shorten if power/RPE collapses.</p></article><article class="option"><div class="tag">Workout</div><h3>Day 2 Technical · 1:45</h3><div class="when"><strong>Do this if: </strong>Practice handling terrain while tired.</div><p>45 min aerobic → 45 min technical gravel with braking/reacceleration and cadence shifts → 15 min easy finish.</p></article><article class="option heat"><div class="tag">Heat</div><h3>Heat Endurance · 60 min</h3><div class="when"><strong>Do this if: </strong>Want a substantial heat exposure after an easier Saturday.</div><p>5 min normally cooled → 50 min easy <span class="w">120–155 W</span> in genuinely warm conditions with some airflow → 5 min cool. <b>60:00 total.</b> Reduce watts as needed; no deliberate dehydration.</p></article><article class="option heat"><div class="tag">Heat</div><h3>Heat Endurance · 75 min</h3><div class="when"><strong>Do this if: </strong>Can sustain heat safely without compromising recovery.</div><p>5 min normally cooled → 60 min easy <span class="w">120–155 W</span> in sustained warmth with some airflow → 10 min cool. <b>75:00 total.</b> Use only when 60-min heat is well tolerated.</p></article><article class="option"><div class="tag">Workout</div><h3>Off</h3><div class="when"><strong>Do this if: </strong>Saturday was very demanding.</div><p>Full rest.</p></article></div></section><footer>V9 · One menu · ~45-min weekday rides · FTP 245 W (recheck periodically) · <span class="source-links">Evidence: <a href="https://pubmed.ncbi.nlm.nih.gov/31977120/" rel="noopener" target="_blank">Rønnestad 2020</a> · <a href="https://pubmed.ncbi.nlm.nih.gov/40328438/" rel="noopener" target="_blank">2025 interval comparison</a> · <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC9811094/" rel="noopener" target="_blank">IOC heat consensus</a></span></footer></div></body></html>
+<section class="day" id="tue" role="tabpanel" aria-labelledby="tab-tue">
+<div class="day-title"><h2>Tuesday</h2><p>Hard cycling · choose one</p></div>
+
+<details class="workout" open><summary><div class="workout-name">Rønnestad 30/15 <span class="duration">45 min</span></div><p class="cue">Default VO₂ session</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">10 min</span><span>Progressive warm-up; include 2 × 20 sec fast efforts.</span></li>
+<li><span class="when">3 × 11</span><span>Repeat <strong>30 sec at <span class="watts">300–320 W</span></strong>, then <strong>15 sec at <span class="watts">130–155 W</span></strong>. Eleven repetitions per set.</span></li>
+<li><span class="when">3 min</span><span>Easy pedaling between sets (twice).</span></li>
+<li><span class="when">4:15</span><span>Easy cooldown.</span></li>
+</ol><p class="note">Keep hard efforts consistent. If ERG transitions lag, use resistance mode.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">VO₂ 4 × 4 <span class="duration">45 min</span></div><p class="cue">Longer VO₂ efforts</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">12 min</span><span>Progressive warm-up, including 2 × 20 sec brisk efforts.</span></li>
+<li><span class="when">4 × 4</span><span><strong>4 min at <span class="watts">270–285 W</span></strong>.</span></li>
+<li><span class="when">3 min</span><span>Easy pedaling between intervals (three times).</span></li>
+<li><span class="when">8 min</span><span>Cooldown.</span></li>
+</ol></div></details>
+
+<details class="workout race"><summary><div class="workout-name">Zwift race <span class="duration">45–50 min</span></div><p class="cue">Race instead of intervals</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">12 min</span><span>Warm up progressively, with 3 × 20 sec hard accelerations.</span></li>
+<li><span class="when">25–30</span><span>Race a rolling or punchy course. Push for position, follow surges, then recover while staying in the group.</span></li>
+<li><span class="when">8 min</span><span>Easy cooldown.</span></li>
+</ol><p class="note">Pick a race expected to last 25–30 minutes so the whole session fits.</p></div></details>
+</section>
+
+<section class="day" id="wed" role="tabpanel" aria-labelledby="tab-wed">
+<div class="day-title"><h2>Wednesday</h2><p>Strength · choose one</p></div>
+
+<details class="workout" open><summary><div class="workout-name">Full-body strength <span class="duration">56 min</span></div><p class="cue">Default strength day</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">0–5</span><span>Dynamic hip / ankle prep; squat, hinge, and lunge patterns.</span></li>
+<li><span class="when">5–8</span><span>Vertical jumps <strong>3 × 3</strong>, crisp and explosive.</span></li>
+<li><span class="when">8–11</span><span>Squat ramp: bar × 8 → 135 lb × 5 → 165 lb × 3.</span></li>
+<li><span class="when">11–22</span><span>Back squat <strong>3 × 5 @ 205 lb</strong>; rest 2.5–3 min.</span></li>
+<li><span class="when">22–31</span><span>Trap-bar deadlift <strong>2 × 6 @ 205 lb</strong> + pull-ups <strong>2 × 5–8</strong>.</span></li>
+<li><span class="when">31–41</span><span>Bulgarian split squat <strong>2 × 6/leg</strong> + barbell overhead press <strong>2 × 6–8 @ 75 lb</strong>, RPE ≈ 8.</span></li>
+<li><span class="when">41–49</span><span>Copenhagen plank <strong>2 × 20–30 sec/side</strong> + suitcase carry <strong>2 × 30–45 sec/side</strong>.</span></li>
+<li><span class="when">49–56</span><span>Single-leg calf raise <strong>2 × 10–15</strong> + push-ups <strong>2 sets</strong>, ~2 reps in reserve.</span></li>
+</ol><p class="note">Use these as working loads, not mandatory targets. Leave 1–3 reps in reserve on heavy leg lifts.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">Short strength <span class="duration">25 min</span></div><p class="cue">Lower-fatigue alternative</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">5 min</span><span>Dynamic warm-up and squat / hinge ramp-up.</span></li>
+<li><span class="when">8 min</span><span>Back squat <em>or</em> trap-bar deadlift <strong>2 × 3</strong>, moderate-heavy, no grinding.</span></li>
+<li><span class="when">5 min</span><span>Bulgarian split squat <strong>1 × 5/leg</strong>.</span></li>
+<li><span class="when">7 min</span><span>Copenhagen plank <strong>2 × 20 sec/side</strong> + suitcase carry <strong>1 × 30 sec/side</strong>.</span></li>
+</ol></div></details>
+<p class="footnote">Skip strength entirely if recovery is poor.</p>
+</section>
+
+<section class="day" id="thu" role="tabpanel" aria-labelledby="tab-thu">
+<div class="day-title"><h2>Thursday</h2><p>Supporting ride · choose one</p></div>
+
+<details class="workout" open><summary><div class="workout-name">Tempo <span class="duration">45 min</span></div><p class="cue">Default steady ride</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">7 min</span><span>Easy progressive warm-up.</span></li>
+<li><span class="when">2 × 15</span><span><strong>195–210 W</strong> at comfortable cadence.</span></li>
+<li><span class="when">4 min</span><span>Easy pedaling between intervals.</span></li>
+<li><span class="when">4 min</span><span>Cooldown.</span></li>
+</ol></div></details>
+
+<details class="workout"><summary><div class="workout-name">Surge + settle <span class="duration">45 min</span></div><p class="cue">Practice repeated accelerations</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">8 min</span><span>Warm-up.</span></li>
+<li><span class="when">3 × 9</span><span>Each 9-minute block: <strong>20 sec at <span class="watts">300–330 W</span></strong> then <strong>2:40 at <span class="watts">185–205 W</span></strong>; repeat that pattern three times. No coasting after the surge.</span></li>
+<li><span class="when">3 min</span><span>Easy pedaling between blocks (twice).</span></li>
+<li><span class="when">4 min</span><span>Cooldown.</span></li>
+</ol><p class="note">This is another demanding workout; use it when recovered from Tuesday and before a controlled Saturday.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">Easy endurance <span class="duration">45 min</span></div><p class="cue">Keep Thursday light</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">5 min</span><span>Easy warm-up.</span></li>
+<li><span class="when">35 min</span><span>Ride steadily at <span class="watts">150–175 W</span>.</span></li>
+<li><span class="when">5 min</span><span>Easy cooldown.</span></li>
+</ol></div></details>
+
+<details class="workout heat"><summary><div class="workout-name">Heat ride <span class="duration">45 min</span></div><p class="cue">Short heat exposure</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">5 min</span><span>Easy warm-up with normal fan cooling.</span></li>
+<li><span class="when">35 min</span><span>Easy <span class="watts">120–155 W</span> in a genuinely warm room with <strong>some</strong> airflow. Reduce power as needed.</span></li>
+<li><span class="when">5 min</span><span>Cool down with normal fan cooling.</span></li>
+</ol><p class="note">Heat is the stressor, not watts. Don't deliberately dehydrate.</p></div></details>
+</section>
+
+<section class="day" id="sat" role="tabpanel" aria-labelledby="tab-sat">
+<div class="day-title"><h2>Saturday</h2><p>Outdoor ride · choose one</p></div>
+
+<details class="workout" open><summary><div class="workout-name">Gravel endurance <span class="duration">2:30</span></div><p class="cue">Default long ride</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">15 min</span><span>Start easy: <span class="watts">135–155 W</span>.</span></li>
+<li><span class="when">2:05</span><span>On rideable gravel, aim for <span class="watts">150–180 W</span>. Let climbs, coasting, and rough terrain vary the power naturally. Include <strong>20 minutes of rougher gravel in the second half</strong>; focus on braking, line choice, and smooth reacceleration.</span></li>
+<li><span class="when">10 min</span><span>Easy ride home.</span></li>
+</ol><p class="note">Fuel consistently; a familiar starting target is 60–80 g carbohydrate per hour, adjusted to gut tolerance.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">Gravel surges <span class="duration">3:00</span></div><p class="cue">Harder long ride</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">15 min</span><span>Easy warm-up at <span class="watts">135–155 W</span>.</span></li>
+<li><span class="when">90 min</span><span>Steady gravel at <span class="watts">150–180 W</span> on rideable terrain. Ride the climbs naturally.</span></li>
+<li><span class="when">3 × 15</span><span>Hold <span class="watts">185–205 W</span> between surges. At minutes <strong>3, 8 and 13</strong> of each block, accelerate for <strong>20 sec at <span class="watts">300–330 W</span></strong>; settle immediately back to 185–205 W.</span></li>
+<li><span class="when">5 min</span><span>Easy pedaling between blocks (twice).</span></li>
+<li><span class="when">20 min</span><span>Easy finish.</span></li>
+</ol><p class="note">Do the hard blocks on safe, relatively smooth terrain. Fuel throughout.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">Easy gravel <span class="duration">1:30</span></div><p class="cue">Short or recovery ride</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">15 min</span><span>Easy start.</span></li>
+<li><span class="when">65 min</span><span>Comfortable ride at <span class="watts">145–165 W</span> on rideable terrain; no planned surges.</span></li>
+<li><span class="when">10 min</span><span>Easy finish.</span></li>
+</ol></div></details>
+</section>
+
+<section class="day" id="sun" role="tabpanel" aria-labelledby="tab-sun">
+<div class="day-title"><h2>Sunday</h2><p>Endurance, heat, or rest</p></div>
+
+<details class="workout" open><summary><div class="workout-name">Second-day endurance <span class="duration">75 min</span></div><p class="cue">Ride on Saturday's legs</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">10 min</span><span>Easy warm-up.</span></li>
+<li><span class="when">55 min</span><span>Hold <span class="watts">150–175 W</span>. Maintain a smooth cadence even if legs feel heavy.</span></li>
+<li><span class="when">10 min</span><span>Easy cooldown.</span></li>
+</ol><p class="note">Keep this controlled, not a second race.</p></div></details>
+
+<details class="workout heat"><summary><div class="workout-name">Heat endurance <span class="duration">60 min</span></div><p class="cue">Longer heat exposure</p></summary>
+<div class="prescription"><ol class="steps">
+<li><span class="when">5 min</span><span>Easy with normal cooling.</span></li>
+<li><span class="when">50 min</span><span>Easy <span class="watts">120–155 W</span> in sustained warmth, with some airflow. Adjust power down if heat strain rises.</span></li>
+<li><span class="when">5 min</span><span>Easy cooldown with normal cooling.</span></li>
+</ol><p class="note">Hydrate normally; stop for dizziness, nausea or unusual weakness. Don't try to force dehydration.</p></div></details>
+
+<details class="workout"><summary><div class="workout-name">Rest <span class="duration">Off</span></div><p class="cue">After a demanding Saturday</p></summary>
+<div class="prescription"><p class="note">No ride. An easy walk is fine.</p></div></details>
+</section>
+
+<p class="caution">Power ranges are based on FTP 245 W. Outdoors, prioritize control and safe handling over exact numbers. For heat riding, begin conservatively and avoid sessions when sick, dehydrated, or excessively fatigued.</p>
+</main>
+<script>
+(function(){
+const tabs=Array.from(document.querySelectorAll('[role="tab"]'));
+const panels=Array.from(document.querySelectorAll('[role="tabpanel"]'));
+function show(id){
+ tabs.forEach(b=>{const active=b.getAttribute('aria-controls')===id;b.setAttribute('aria-selected',String(active));b.tabIndex=active?0:-1;});
+ panels.forEach(p=>{p.hidden=p.id!==id;});
+}
+tabs.forEach((b,i)=>{b.addEventListener('click',()=>show(b.getAttribute('aria-controls')));b.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();const n=(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[n].focus();show(tabs[n].getAttribute('aria-controls'));}});});
+const today=new Date().getDay();
+show(({0:'sun',2:'tue',3:'wed',4:'thu',6:'sat'})[today]||'tue');
+})();
+</script>
+</body>
+</html>
